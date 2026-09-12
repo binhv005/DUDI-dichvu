@@ -4,17 +4,17 @@ import { PRICING_DATA } from '../data/content';
 
 const PACKAGE_METADATA = {
   basic: {
-    img: '/0042a150fd077d5924161.jpg',
+    img: '/pricing_basic.webp',
     code: 'STARTER',
     lineColor: '#2563eb',
   },
   standard: {
-    img: '/0a16cd049153110d48422.jpg',
+    img: '/pricing_standard.webp',
     code: 'STANDARD',
     lineColor: '#e51b24',
   },
   premium: {
-    img: '/d08537976bc0eb9eb2d13.jpg',
+    img: '/pricing_premium.webp',
     code: 'PREMIUM',
     lineColor: '#1d4ed8',
   },
@@ -45,7 +45,7 @@ export default function Pricing({ onSelectPackage }) {
           {PRICING_DATA.packages.map((pkg) => {
             const isPopular = pkg.isPopular;
             const meta = PACKAGE_METADATA[pkg.id] || {
-              img: '/0042a150fd077d5924161.jpg',
+              img: '/pricing_basic.webp',
               code: pkg.id.toUpperCase(),
               lineColor: '#2563eb',
             };

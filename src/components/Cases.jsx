@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, ArrowRight, Check, ExternalLink, Globe } from 'lucide-react';
+import { Layers, ArrowRight, Check, ExternalLink, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const SHOWCASE_PROJECTS = [
   {
@@ -23,7 +23,7 @@ export const SHOWCASE_PROJECTS = [
     liveUrl: 'https://www.odysseyhagiangloop.com/',
     targetUrl: 'https://www.odysseyhagiangloop.com/',
     previewType: 'odyssey',
-    sectionBg: '/411afe886bfaeed3efb83b1656969d0f.jpg',
+    sectionBg: '/case_odyssey_bg.webp',
   },
   {
     id: 'case-02',
@@ -46,13 +46,21 @@ export const SHOWCASE_PROJECTS = [
     liveUrl: 'https://caonguyenxanh.com.vn/',
     targetUrl: 'https://caonguyenxanh.com.vn/',
     previewType: 'caonguyenxanh',
-    sectionBg: '/79ff17f6e2b2f8385ff63985e9fccbdb.jpg',
+    sectionBg: '/case_caonguyenxanh_bg.webp',
   },
 ];
 
 export default function Cases() {
   const [activeTab, setActiveTab] = useState(0);
   const current = SHOWCASE_PROJECTS[activeTab];
+
+  const handlePrev = () => {
+    setActiveTab((prev) => (prev > 0 ? prev - 1 : SHOWCASE_PROJECTS.length - 1));
+  };
+
+  const handleNext = () => {
+    setActiveTab((prev) => (prev < SHOWCASE_PROJECTS.length - 1 ? prev + 1 : 0));
+  };
 
   return (
     <section id="cases" className="section cases-showcase-section section-screen-fit">
@@ -64,7 +72,7 @@ export default function Cases() {
         }}
       />
       <div className="container relative-z2">
-        {/* Top Header Row with Tabs */}
+        {/* Top Header Row with Single Project Switcher */}
         <div className="cases-top-bar">
           <div className="cases-header-left">
             <div className="cases-tag-badge">
@@ -74,23 +82,31 @@ export default function Cases() {
             <h2 className="cases-main-title">Một số dự án DUDI đã thực hiện</h2>
           </div>
 
-          {/* Project Switcher Tabs */}
-          <div className="project-tabs-wrap">
-            {SHOWCASE_PROJECTS.map((item, index) => {
-              const isActive = activeTab === index;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveTab(index)}
-                  className={`project-tab-btn ${isActive ? 'active' : ''}`}
-                >
-                  <span className={`tab-dot ${isActive ? 'active-dot' : ''}`}>●</span>
-                  <span className="tab-name">{item.tabLabel}</span>
-                  <span className="tab-price-tag">{item.tabPrice}</span>
-                </button>
-              );
-            })}
+          {/* Project Switcher: Arrows + Single Active Project */}
+          <div className="project-switcher-bar">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="switcher-arrow-btn"
+              aria-label="Dự án trước"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <div className="switcher-active-pill">
+              <span className="switcher-dot">●</span>
+              <span className="switcher-title">{current.tabLabel}</span>
+              <span className="switcher-price-tag">{current.tabPrice}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleNext}
+              className="switcher-arrow-btn"
+              aria-label="Dự án kế tiếp"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
         </div>
 
@@ -160,7 +176,7 @@ export default function Cases() {
               <div className="details-bottom-actions">
                 <div className="live-status-indicator">
                   <span className="pulse-green-dot"></span>
-                  <span>Đang hoạt động online</span>
+                  <span>Đang hoạt động</span>
                 </div>
 
                 <a
@@ -169,7 +185,7 @@ export default function Cases() {
                   rel="noopener noreferrer"
                   className="btn-visit-project"
                 >
-                  <span>Truy cập {current.domain}</span>
+                  <span>{current.domain}</span>
                   <ArrowRight size={16} />
                 </a>
               </div>

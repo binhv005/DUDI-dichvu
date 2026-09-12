@@ -53,7 +53,7 @@ export default function Problems() {
         <div className="problems-grid">
           {PROBLEMS_DATA.items.map((item) => {
             const media = PROBLEM_MEDIA[item.number] || {
-              img: '/problem_speed.jpg',
+              img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
               tag: 'Vấn đề',
               tagColor: '#ef4444',
               bgColor: '#fef2f2',

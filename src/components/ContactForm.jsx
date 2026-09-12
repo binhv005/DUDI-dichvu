@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Send, CheckCircle2, AlertCircle, Sparkles, ShieldCheck, Lock, PhoneCall } from 'lucide-react';
-import { FORM_DATA, COMPANY_INFO } from '../data/content';
+import { FORM_DATA, COMPANY_INFO, GOOGLE_SCRIPT_CONFIG } from '../data/content';
 
 export default function ContactForm({ selectedPackage, onPackageChange, onShowToast }) {
   // Form State
@@ -100,7 +100,7 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Honeypot check
@@ -123,14 +123,49 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
 
     setIsSubmitting(true);
 
-    // Simulate safe async submit with tracking
-    setTimeout(() => {
+    // Map labels for human readable email notification
+    const pkgObj = FORM_DATA.packageOptions.find((p) => p.value === formData.selectedPackage);
+    const objObj = FORM_DATA.objectiveOptions.find((o) => o.value === formData.objective);
+
+    const payload = {
+      fullName: formData.fullName.trim(),
+      phone: formData.phone.trim(),
+      companyName: formData.companyName.trim() || 'Cá nhân / Chưa đặt tên',
+      productService: formData.productService.trim(),
+      selectedPackage: formData.selectedPackage,
+      packageLabel: pkgObj ? pkgObj.label : formData.selectedPackage,
+      objective: formData.objective,
+      objectiveLabel: objObj ? objObj.label : formData.objective,
+      targetDate: formData.targetDate || 'Càng sớm càng tốt',
+      description: formData.description.trim() || 'Không có ghi chú thêm',
+      recipientEmail: GOOGLE_SCRIPT_CONFIG.recipientEmail,
+      landingUrl: metaInfo.landingUrl || window.location.href,
+      utmSource: metaInfo.utmSource,
+      referrer: metaInfo.referrer,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      if (GOOGLE_SCRIPT_CONFIG.webAppUrl && !GOOGLE_SCRIPT_CONFIG.webAppUrl.includes('SAMPLE_')) {
+        // Post to Google Apps Script Web App
+        await fetch(GOOGLE_SCRIPT_CONFIG.webAppUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+      }
+    } catch (err) {
+      console.warn('Google Script Submission Log:', err);
+    } finally {
       setIsSubmitting(false);
       setIsSubmitted(true);
       setLastSubmitTime(Date.now());
       onShowToast('Gửi thông tin đăng ký thành công! DUDI Software sẽ liên hệ lại ngay.');
 
-      // Log lead event (without exposing sensitive credentials)
+      // Log lead event (Google Tag / dataLayer)
       if (window.dataLayer) {
         window.dataLayer.push({
           event: 'lead_form_submit',
@@ -139,7 +174,7 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
           meta: metaInfo,
         });
       }
-    }, 1000);
+    }
   };
 
   const handleResetForm = () => {

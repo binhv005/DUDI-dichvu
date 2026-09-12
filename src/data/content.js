@@ -89,32 +89,32 @@ export const TARGET_AUDIENCE_DATA = {
 export const PROBLEMS_DATA = {
   sectionTitle: "Thực Trạng Khách Hàng Thường Gặp",
   sectionSubtitle:
-    "Những rào cản phổ biến khiến chiến dịch quảng cáo của doanh nghiệp chưa đạt hiệu quả mong muốn",
+    "Những rào cản phổ biến khiến chiến dịch quảng cáo chưa đạt hiệu quả chuyển đổi mong muốn",
   items: [
     {
       number: "01",
-      title: "Tỷ Lệ Thoát Trang Cao & Tốc Độ Tải Chậm",
-      desc: "Trang đích tải quá 3 giây khiến phần lớn người dùng rời đi trước khi kịp đọc nội dung, làm lãng phí ngân sách quảng cáo của doanh nghiệp.",
+      title: "Tải Chậm & Thoát Trang Cao",
+      desc: "Tải quá 3s khiến khách rời đi ngay, gây lãng phí lớn ngân sách chạy Ads.",
     },
     {
       number: "02",
-      title: "Giao Diện Chưa Tối Ưu Cho Thiết Bị Di Động",
-      desc: "Hơn 80% lưu lượng truy cập đến từ điện thoại nhưng giao diện bị co kéo, chữ quá nhỏ, nút bấm khó thao tác dẫn đến mất khách hàng.",
+      title: "Chưa Tối Ưu Cho Mobile",
+      desc: "Hơn 80% truy cập từ điện thoại nhưng layout bị co kéo, chữ nhỏ, khó thao tác.",
     },
     {
       number: "03",
-      title: "Bố Cục Nội Dung Rối Rắm & CTA Thiếu Nổi Bật",
-      desc: "Thông điệp bán hàng dài dòng, không đúng tâm lý khách hàng, nút kêu gọi hành động mờ nhạt khiến khách hàng phân vân và không để lại thông tin.",
+      title: "Bố Cục Rối, CTA Mờ Nhạt",
+      desc: "Thông điệp dài dòng, nút kêu gọi không nổi bật khiến khách không để lại thông tin.",
     },
     {
       number: "04",
-      title: "Thiếu Hệ Thống Đo Lường Chuyển Đổi Chuẩn Xác",
-      desc: "Không cài đặt đúng Google Analytics 4, Facebook Pixel, TikTok Event khiến việc tối ưu quảng cáo gặp khó khăn, không biết khách thoát ở đâu.",
+      title: "Thiếu Đo Lường Chuẩn Xác",
+      desc: "Chưa cài chuẩn GA4, Pixel, TikTok Event, không đo được điểm rơi chuyển đổi.",
     },
     {
       number: "05",
-      title: "Chi Phí Duy Trì Đắt Đỏ & Phụ Thuộc Nền Tảng",
-      desc: "Sử dụng các nền tảng kéo thả bị thu phí hàng tháng định kỳ cao, tốc độ phụ thuộc máy chủ bên thứ ba và khó tùy biến sâu theo ý muốn.",
+      title: "Chi Phí Thuê Nền Tảng Cao",
+      desc: "Mất phí duy trì hàng tháng đắt đỏ, bị phụ thuộc và khó tùy biến theo ý muốn.",
     },
   ],
 };
@@ -429,3 +429,9 @@ export const FINAL_CTA_DATA = {
     { type: "email", label: "Email: contact@dudisoftware.com", value: "contact@dudisoftware.com" },
   ],
 };
+
+export const GOOGLE_SCRIPT_CONFIG = {
+  recipientEmail: import.meta.env.VITE_RECIPIENT_EMAIL || "vtb22522005@gmail.com",
+  webAppUrl: import.meta.env.VITE_GOOGLE_SCRIPT_URL || "",
+};
+

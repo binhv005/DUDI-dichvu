@@ -160,8 +160,8 @@
 .problems-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  max-width: 1200px;
+  gap: 16px;
+  max-width: 1240px;
   margin: 0 auto;
   align-items: stretch;
 }
@@ -169,7 +169,7 @@
 .problem-card {
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 12px 14px 14px 14px;
+  padding: 14px 16px 16px 16px;
   border: 1px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
   display: flex;
@@ -187,11 +187,11 @@
 /* Image Banner Top */
 .problem-img-wrap {
   width: 100%;
-  height: 96px;
+  height: 112px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border-radius: 12px;
   overflow: hidden;
   background: transparent;
@@ -215,38 +215,38 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .problem-num-badge {
   font-family: var(--font-heading);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: #94a3b8;
   letter-spacing: -0.02em;
 }
 
 .problem-category-pill {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  padding: 2.5px 8px;
+  padding: 3px 9px;
   border-radius: var(--radius-full);
   text-transform: uppercase;
 }
 
 .problem-title {
-  font-size: 0.84375rem;
+  font-size: 0.9375rem;
   font-weight: 800;
   color: #0f172a;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   line-height: 1.3;
 }
 
 .problem-desc {
-  font-size: 0.71875rem;
+  font-size: 0.78125rem;
   color: #64748b;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-top: auto;
 }
 
@@ -657,7 +657,20 @@
   color: #1e293b;
 }
 
-/* Dynamic Detail Card Displayed on Hover / Active */
+/* Desktop & Mobile Display Control */
+.desktop-only-stepper {
+  display: block;
+}
+
+.process-detail-card.desktop-only-stepper {
+  display: flex;
+}
+
+.mobile-only-stepper {
+  display: none !important;
+}
+
+/* Dynamic Detail Card Displayed on Desktop Hover / Active */
 .process-detail-card {
   background: #ffffff;
   border: 1.5px solid #fee2e2;
@@ -730,6 +743,171 @@
   line-height: 1.5;
 }
 
+/* ===== Mobile Vertical Stepper Styles ===== */
+.process-mobile-vertical-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.process-vertical-track-line {
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 22px;
+  width: 2px;
+  background-color: #e2e8f0;
+  z-index: 1;
+}
+
+.process-v-step-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.v-step-left {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  margin-left: 6px;
+}
+
+.v-step-node-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65625rem;
+  font-weight: 800;
+  color: #64748b;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 0 3px #f8fafc;
+}
+
+.process-v-step-card.active .v-step-node-circle {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
+}
+
+.process-v-step-card.passed .v-step-node-circle {
+  background: #334155;
+  border-color: #334155;
+  color: #ffffff;
+}
+
+.v-step-content {
+  flex-grow: 1;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+  transition: all 0.25s ease;
+}
+
+.process-v-step-card.active .v-step-content {
+  border-color: #fca5a5;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.08);
+}
+
+.v-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.v-step-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.process-v-step-card.active .v-step-icon-box {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.v-step-title-wrap {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.v-step-num-text {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.process-v-step-card.active .v-step-num-text {
+  color: #dc2626;
+}
+
+.v-step-title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.v-step-toggle-arrow {
+  color: #94a3b8;
+  transition: transform 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v-step-toggle-arrow.open {
+  transform: rotate(180deg);
+  color: #dc2626;
+}
+
+.v-step-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding-top 0.3s ease;
+}
+
+.v-step-body.open {
+  max-height: 200px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 8px;
+}
+
+.v-step-desc {
+  font-size: 0.78125rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
 /* Compact Process Footer Notice */
 .process-footer-notice-compact {
   background-color: #ffffff;
@@ -757,28 +935,13 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 900px) {
-  .process-timeline-wrapper {
-    overflow-x: auto;
-    padding: 20px 14px;
+@media (max-width: 860px) {
+  .desktop-only-stepper {
+    display: none !important;
   }
   
-  .process-track-container {
-    min-width: 760px;
-  }
-  
-  .process-detail-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .detail-card-right {
-    border-left: none;
-    padding-left: 0;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 10px;
-    width: 100%;
+  .mobile-only-stepper {
+    display: flex !important;
   }
 }
 

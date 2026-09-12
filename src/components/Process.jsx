@@ -10,7 +10,8 @@ import {
   Code2, 
   ShieldCheck, 
   Rocket, 
-  Check 
+  Check,
+  ChevronDown 
 } from 'lucide-react';
 import { PROCESS_DATA } from '../data/content';
 
@@ -28,8 +29,8 @@ const STEP_ICONS = [
 
 export default function Process() {
   const [activeStep, setActiveStep] = useState(0);
-  const currentStep = PROCESS_DATA.steps[activeStep] || PROCESS_DATA.steps[0];
-  const CurrentIcon = STEP_ICONS[activeStep] || MessageSquare;
+  const currentStep = PROCESS_DATA.steps[activeStep >= 0 ? activeStep : 0] || PROCESS_DATA.steps[0];
+  const CurrentIcon = STEP_ICONS[activeStep >= 0 ? activeStep : 0] || MessageSquare;
 
   return (
     <section id="process" className="section section-screen-fit process-stepper-section bg-gray-tint">
@@ -44,15 +45,15 @@ export default function Process() {
           <p className="section-subtitle">{PROCESS_DATA.sectionSubtitle}</p>
         </div>
 
-        {/* Stepper Timeline Bar */}
-        <div className="process-timeline-wrapper">
+        {/* 1. DESKTOP VIEW: Horizontal Stepper Timeline Bar */}
+        <div className="process-timeline-wrapper desktop-only-stepper">
           <div className="process-track-container">
             {/* Background Line */}
             <div className="process-track-line-bg"></div>
             {/* Active Filled Progress Line */}
             <div 
               className="process-track-line-fill"
-              style={{ width: `${(activeStep / (PROCESS_DATA.steps.length - 1)) * 100}%` }}
+              style={{ width: `${(Math.max(0, activeStep) / (PROCESS_DATA.steps.length - 1)) * 100}%` }}
             ></div>
 
             {/* 9 Stepper Nodes */}
@@ -94,8 +95,8 @@ export default function Process() {
           </div>
         </div>
 
-        {/* Dynamic Detail Card Displayed on Hover / Active */}
-        <div className="process-detail-card">
+        {/* Dynamic Detail Card Displayed on Desktop */}
+        <div className="process-detail-card desktop-only-stepper">
           <div className="detail-card-left">
             <div className="detail-icon-box">
               <CurrentIcon size={24} color="#dc2626" />
@@ -111,6 +112,53 @@ export default function Process() {
           <div className="detail-card-right">
             <p className="detail-desc">{currentStep.desc}</p>
           </div>
+        </div>
+
+        {/* 2. MOBILE VIEW: Vertical Interactive Timeline */}
+        <div className="process-mobile-vertical-wrapper mobile-only-stepper">
+          <div className="process-vertical-track-line"></div>
+          {PROCESS_DATA.steps.map((item, index) => {
+            const Icon = STEP_ICONS[index] || MessageSquare;
+            const isPassed = activeStep >= 0 && index < activeStep;
+            const isActive = index === activeStep;
+
+            return (
+              <div
+                key={item.step}
+                className={`process-v-step-card ${isActive ? 'active' : ''} ${isPassed ? 'passed' : ''}`}
+                onClick={() => setActiveStep(isActive ? -1 : index)}
+              >
+                <div className="v-step-left">
+                  <div className="v-step-node-circle">
+                    {isPassed ? (
+                      <Check size={12} strokeWidth={3} />
+                    ) : (
+                      <span>{item.step}</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="v-step-content">
+                  <div className="v-step-header">
+                    <div className="v-step-icon-box">
+                      <Icon size={16} />
+                    </div>
+                    <div className="v-step-title-wrap">
+                      <span className="v-step-num-text">Bước {item.step}</span>
+                      <h3 className="v-step-title">{item.title}</h3>
+                    </div>
+                    <div className={`v-step-toggle-arrow ${isActive ? 'open' : ''}`}>
+                      <ChevronDown size={16} />
+                    </div>
+                  </div>
+
+                  <div className={`v-step-body ${isActive ? 'open' : ''}`}>
+                    <p className="v-step-desc">{item.desc}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Process Guarantee Note Footer */}

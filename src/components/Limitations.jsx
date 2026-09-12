@@ -24,7 +24,7 @@ export default function Limitations() {
             <div className="scope-avatar-wrap">
               <div className="scope-avatar-circle">
                 <img
-                  src="/755b8a98-0833-478b-9c56-b21b329065c8.jpg"
+                  src="/scope_support.webp"
                   alt="Hạng Mục Bao Gồm Trong Gói"
                   className="scope-avatar-img"
                 />
@@ -63,7 +63,7 @@ export default function Limitations() {
             <div className="scope-avatar-wrap">
               <div className="scope-avatar-circle">
                 <img
-                  src="/4943e6bab1ed31b368fc.jpg"
+                  src="/scope_guidance.webp"
                   alt="Hạng Mục Báo Giá Riêng"
                   className="scope-avatar-img"
                 />
@@ -102,7 +102,7 @@ export default function Limitations() {
             <div className="scope-avatar-wrap">
               <div className="scope-avatar-circle">
                 <img
-                  src="/e76b660e3259b207eb48.jpg"
+                  src="/scope_refuse.webp"
                   alt="Điều Kiện & Nghiệm Thu"
                   className="scope-avatar-img"
                 />
