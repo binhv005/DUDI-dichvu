@@ -1,0 +1,326 @@
+:root {
+  /* Enforce Light Theme */
+  color-scheme: light !important;
+
+  /* DUDI Brand Logo Palette (#E51B24 / #EA1D24) */
+  --primary-50: #fff1f2;
+  --primary-100: #ffe4e6;
+  --primary-200: #fecdd0;
+  --primary-300: #fca5a9;
+  --primary-400: #f87176;
+  --primary-500: #ef333b;
+  --primary-600: #e51b24;
+  --primary-700: #c91018;
+  --primary-800: #a70b12;
+  --primary-900: #88080e;
+  --primary-red: #e51b24;
+  --primary-hover: #c91018;
+  --primary-glow: rgba(229, 27, 36, 0.2);
+
+  /* Alternating Section Backgrounds */
+  --bg-white: #ffffff;
+  --bg-red-tint: #fff6f6;
+  --bg-gray-tint: #f8fafc;
+  --bg-card: #ffffff;
+
+  /* Neutrals & Text */
+  --text-dark: #0f172a;
+  --text-heading: #111827;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-white: #ffffff;
+
+  /* Borders & Highlights */
+  --border-light: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-red: rgba(225, 29, 72, 0.25);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 16px 24px -8px rgba(225, 29, 72, 0.12), 0 6px 12px -4px rgba(0, 0, 0, 0.04);
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --header-height: 64px;
+  --container-max-width: 1200px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* Global Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #ffffff !important;
+  color: var(--text-body);
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background-color: #ffffff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box;
+}
+
+.dudi-landing-page-app {
+  width: 100%;
+  max-width: 100%;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+main {
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-heading);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Accessibility Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--primary-600);
+  outline-offset: 2px;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Base Section Styling (Screen-fitting & compact) */
+.section {
+  position: relative;
+  width: 100%;
+  padding: 48px 0;
+  scroll-margin-top: var(--header-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Screen-fitting on Desktop (>= 1024px) */
+@media (min-height: 680px) and (min-width: 1024px) {
+  .section-screen-fit {
+    min-height: calc(100vh - var(--header-height));
+    padding: 36px 0;
+  }
+}
+
+/* Alternating Backgrounds */
+.bg-white {
+  background-color: var(--bg-white);
+}
+
+.bg-red-tint {
+  background-color: var(--bg-red-tint);
+  background-image: radial-gradient(circle at 15% 25%, rgba(225, 29, 72, 0.025) 0%, transparent 40%),
+                    radial-gradient(circle at 85% 75%, rgba(225, 29, 72, 0.03) 0%, transparent 40%);
+}
+
+.bg-gray-tint {
+  background-color: var(--bg-gray-tint);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(248, 250, 252, 1) 100%);
+}
+
+/* Compact Section Headers */
+.section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 28px;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary-600);
+  background-color: var(--primary-50);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 10px;
+  border: 1px solid var(--primary-200);
+}
+
+.section-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.section-subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  text-align: center;
+  user-select: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-600) 0%, #b91c1c 100%);
+  color: var(--text-white);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  border: 1px solid transparent;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--primary-700);
+  border: 1.5px solid var(--primary-300);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-50);
+  border-color: var(--primary-500);
+  transform: translateY(-2px);
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.8125rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-float {
+  animation: floatAnim 4s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section {
+    padding: 40px 0;
+  }
+  
+  .section-title {
+    font-size: 1.55rem;
+  }
+  
+  .section-subtitle {
+    font-size: 0.875rem;
+  }
+  
+  .section-header {
+    margin-bottom: 24px;
+  }
+  
+  .container {
+    padding: 0 16px;
+  }
+}

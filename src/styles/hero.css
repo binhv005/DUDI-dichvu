@@ -1,0 +1,221 @@
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('/hero-bg.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: calc(var(--header-height) + 24px);
+  padding-bottom: 32px;
+  box-sizing: border-box;
+}
+
+/* Ambient Flowing Aura (Hiệu ứng loang sinh động đa tầng) */
+.hero-ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(55px);
+  z-index: 1;
+}
+
+.glow-1 {
+  top: 12%;
+  left: 0%;
+  width: 540px;
+  height: 460px;
+  background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 228, 230, 0.75) 35%, rgba(254, 205, 211, 0.4) 65%, transparent 80%);
+  animation: glowFloat1 7s ease-in-out infinite alternate;
+}
+
+.glow-2 {
+  bottom: 8%;
+  left: 6%;
+  width: 480px;
+  height: 400px;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 241, 242, 0.85) 0%, rgba(255, 228, 230, 0.6) 40%, rgba(254, 226, 226, 0.3) 70%, transparent 85%);
+  animation: glowFloat2 9s ease-in-out infinite alternate;
+}
+
+@keyframes glowFloat1 {
+  0% { transform: translate(0, 0) scale(0.95); opacity: 0.85; }
+  50% { transform: translate(25px, -15px) scale(1.08); opacity: 1; }
+  100% { transform: translate(-15px, 20px) scale(0.98); opacity: 0.9; }
+}
+
+@keyframes glowFloat2 {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+  50% { transform: translate(-20px, -20px) scale(1.12); opacity: 0.95; }
+  100% { transform: translate(15px, 15px) scale(0.95); opacity: 0.8; }
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 28px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Left Content Block - Transparent & Poster Styled */
+.hero-content-box {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  max-width: 620px;
+  position: relative;
+  z-index: 3;
+}
+
+/* Sub-heading with wide tracking */
+.hero-subheading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Oswald', 'Barlow Condensed', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #881337;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.subheading-sparkle {
+  color: #e51b24;
+}
+
+/* H1 Title with shimmering animated gradient & sharp text drop-shadow */
+.hero-title {
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #5c0f1c 0%, #881337 35%, #be123c 65%, #5c0f1c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShine 6s ease infinite;
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 16px rgba(255, 255, 255, 0.9));
+}
+
+.hero-title .nowrap {
+  white-space: nowrap;
+}
+
+@keyframes gradientShine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Button Actions Row */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.hero-btn-primary {
+  border-radius: var(--radius-full);
+  padding: 13px 28px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e51b24 0%, #b91018 100%);
+  box-shadow: 0 6px 20px rgba(229, 27, 36, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(229, 27, 36, 0.5);
+}
+
+.hero-btn-secondary {
+  border-radius: var(--radius-full);
+  padding: 13px 26px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  background-color: #ffffff;
+  border: 1.5px solid #fecdd0;
+  color: #881337;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-btn-secondary:hover {
+  background-color: #fff1f2;
+  border-color: #e51b24;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Right Mascot Space - Transparent placeholder so the Mascot and Mountain Peak shine through */
+.hero-mascot-space {
+  min-height: 380px;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .hero-section {
+    padding-top: calc(var(--header-height) + 24px);
+    padding-bottom: 36px;
+    background-position: center right;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .hero-content-box {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    padding: 24px !important;
+    border-radius: var(--radius-lg) !important;
+    backdrop-filter: blur(6px);
+  }
+  
+  .hero-mascot-space {
+    display: none;
+  }
+  
+  .hero-title {
+    font-size: 1.95rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+  }
+  
+  .hero-btn-primary, .hero-btn-secondary {
+    width: 100%;
+  }
+}

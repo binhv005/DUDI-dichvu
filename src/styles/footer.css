@@ -1,0 +1,231 @@
+/* ===== S13: DARK FOOTER (Exact match to design screenshot) ===== */
+.site-footer-dark {
+  background-color: #08090d;
+  color: #94a3b8;
+  padding: 56px 0 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  width: 100%;
+}
+
+.footer-dark-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1.05fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+/* Column 1: Company */
+.footer-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.footer-logo-img {
+  height: 38px;
+  width: auto;
+  border-radius: 8px;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-brand-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.brand-white {
+  color: #ffffff;
+}
+
+.brand-red {
+  color: #e51b24;
+}
+
+.footer-company-legal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.footer-company-desc {
+  font-size: 0.84375rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  max-width: 440px;
+}
+
+.footer-legal-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.84375rem;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+.legal-row strong {
+  color: #e2e8f0;
+}
+
+.legal-icon {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Headings */
+.footer-dark-heading {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  margin-bottom: 22px;
+  text-transform: uppercase;
+}
+
+/* Column 2: Contact Cards */
+.footer-dark-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-card-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.contact-card-link:hover {
+  color: #ffffff;
+}
+
+.contact-icon-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(229, 27, 36, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.contact-card-link:hover .contact-icon-badge {
+  background-color: rgba(229, 27, 36, 0.15);
+  border-color: #e51b24;
+}
+
+.contact-card-link strong {
+  color: #ffffff;
+}
+
+/* Column 3: Terms & Back To Top */
+.footer-bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.footer-bullet-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.84375rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+.bullet-dot {
+  color: #94a3b8;
+  font-weight: bold;
+}
+
+.footer-back-to-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 0.84375rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.footer-back-to-top-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Bottom Bar */
+.footer-dark-bottom {
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.copyright-text-dark {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.footer-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .footer-dark-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 680px) {
+  .footer-dark-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .footer-dark-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
