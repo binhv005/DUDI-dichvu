@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X, ArrowRight, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Phone, Menu, X, ArrowRight, MessageSquare, ChevronDown } from 'lucide-react';
 import { COMPANY_INFO, NAV_ITEMS } from '../data/content';
 
 export default function Header({ onShowToast }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      // Active section detection
-      const sections = NAV_ITEMS.map((item) => document.getElementById(item.id));
+      // Active section detection (ignore dropdown items)
+      const validItems = NAV_ITEMS.filter((item) => !item.children);
+      const sections = validItems.map((item) => document.getElementById(item.id));
       const scrollPosition = window.scrollY + 120;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
         if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(NAV_ITEMS[i].id);
+          setActiveSection(validItems[i].id);
           break;
         }
       }
@@ -28,21 +32,48 @@ export default function Header({ onShowToast }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close desktop dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDesktopDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const hoverTimeoutRef = useRef(null);
+
+  const handleDropdownMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setDesktopDropdownOpen(true);
+  };
+
+  const handleDropdownMouseLeave = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    hoverTimeoutRef.current = setTimeout(() => {
+      setDesktopDropdownOpen(false);
+    }, 180);
+  };
+
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
     setMobileMenuOpen(false);
+    setDesktopDropdownOpen(false);
     const element = document.getElementById(targetId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const handlePhoneClick = (e) => {
-    if (window.innerWidth >= 1024 && !/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+  const handleSubItemClick = (e, child) => {
+    setDesktopDropdownOpen(false);
+    setMobileMenuOpen(false);
+    if (!child.href || child.href.startsWith('#')) {
       e.preventDefault();
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(COMPANY_INFO.hotlineRaw);
-        onShowToast(`Đã sao chép hotline ${COMPANY_INFO.hotline}!`);
+      if (onShowToast) {
+        onShowToast(`Đang chuyển hướng tới: ${child.label}`);
       }
     }
   };
@@ -63,37 +94,66 @@ export default function Header({ onShowToast }) {
         {/* Desktop Navigation */}
         <nav className="desktop-nav" aria-label="Main Navigation">
           <ul className="nav-list">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.id} className="nav-item">
-                <a
-                  href={`#${item.id}`}
-                  onClick={(e) => handleNavClick(e, item.id)}
-                  className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              if (item.children) {
+                return (
+                  <li
+                    key={item.id}
+                    className={`nav-item nav-item-dropdown ${desktopDropdownOpen ? 'open' : ''}`}
+                    ref={dropdownRef}
+                    onMouseEnter={handleDropdownMouseEnter}
+                    onMouseLeave={handleDropdownMouseLeave}
+                  >
+                    <button
+                      type="button"
+                      className={`nav-link nav-dropdown-btn ${desktopDropdownOpen ? 'active' : ''}`}
+                      onClick={() => setDesktopDropdownOpen((prev) => !prev)}
+                      aria-expanded={desktopDropdownOpen}
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown
+                        size={14}
+                        className={`dropdown-chevron ${desktopDropdownOpen ? 'rotated' : ''}`}
+                      />
+                    </button>
+
+                    <div className={`nav-dropdown-menu ${desktopDropdownOpen ? 'show' : ''}`}>
+                      <div className="nav-dropdown-inner">
+                        {item.children.map((child, idx) => (
+                          <a
+                            key={idx}
+                            href={child.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleSubItemClick(e, child)}
+                            className="nav-dropdown-item"
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={item.id} className="nav-item">
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(e) => handleNavClick(e, item.id)}
+                    className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
         {/* Header Right Actions */}
         <div className="header-actions">
-          <a
-            href={`tel:${COMPANY_INFO.hotlineRaw}`}
-            onClick={handlePhoneClick}
-            className="header-hotline"
-            title="Hotline tư vấn"
-          >
-            <div className="hotline-icon">
-              <Phone size={15} />
-            </div>
-            <div className="hotline-details">
-              <span className="hotline-label">Hotline 24/7</span>
-              <span className="hotline-number">{COMPANY_INFO.hotline}</span>
-            </div>
-          </a>
-
           <a
             href="#contact"
             onClick={(e) => handleNavClick(e, 'contact')}
@@ -120,17 +180,57 @@ export default function Header({ onShowToast }) {
       <div className={`mobile-menu-drawer ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-inner">
           <ul className="mobile-nav-list">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  onClick={(e) => handleNavClick(e, item.id)}
-                  className={`mobile-nav-link ${activeSection === item.id ? 'active' : ''}`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              if (item.children) {
+                return (
+                  <li key={item.id} className="mobile-nav-item-dropdown">
+                    <button
+                      type="button"
+                      className={`mobile-nav-link mobile-dropdown-toggle ${
+                        mobileDropdownOpen ? 'active' : ''
+                      }`}
+                      onClick={() => setMobileDropdownOpen((prev) => !prev)}
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown
+                        size={16}
+                        className={`mobile-dropdown-arrow ${
+                          mobileDropdownOpen ? 'rotated' : ''
+                        }`}
+                      />
+                    </button>
+                    {mobileDropdownOpen && (
+                      <div className="mobile-dropdown-list">
+                        {item.children.map((child, idx) => (
+                          <a
+                            key={idx}
+                            href={child.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleSubItemClick(e, child)}
+                            className="mobile-dropdown-sublink"
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </li>
+                );
+              }
+
+              return (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(e) => handleNavClick(e, item.id)}
+                    className={`mobile-nav-link ${activeSection === item.id ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="mobile-menu-footer">

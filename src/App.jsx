@@ -24,6 +24,7 @@ import './styles/form.css';
 import './styles/footer.css';
 import './styles/floating.css';
 import './styles/cases.css';
+import './styles/animations.css';
 
 export default function App() {
   const [selectedPackage, setSelectedPackage] = useState('standard');
@@ -35,6 +36,71 @@ export default function App() {
       window.history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll Reveal Intersection Observer with Staggered Delays
+  useEffect(() => {
+    const observerCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.08,
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Auto stagger delays for child cards
+    const gridSelectors = [
+      '.targets-grid > *',
+      '.problems-grid > *',
+      '.deliverables-grid > *',
+      '.pricing-pills-row > *',
+      '.process-steps-grid > *',
+      '.scope-cards-grid > *',
+      '.faq-list > *',
+      '.cases-grid > *',
+    ];
+
+    gridSelectors.forEach((selector) => {
+      const items = document.querySelectorAll(selector);
+      items.forEach((item, index) => {
+        const delay = Math.min((index % 5) * 0.08, 0.4);
+        if (delay > 0) {
+          item.style.transitionDelay = `${delay}s`;
+        }
+      });
+    });
+
+    const revealSelectors = [
+      '.reveal',
+      '.reveal-left',
+      '.reveal-right',
+      '.reveal-zoom',
+      '.section-header',
+      '.target-card',
+      '.problem-card',
+      '.deliverable-card',
+      '.pricing-pill-card',
+      '.process-step-card',
+      '.case-full-card',
+      '.scope-card',
+      '.faq-item',
+      '.contact-form-wrap',
+      '.final-cta-card',
+    ];
+
+    const elements = document.querySelectorAll(revealSelectors.join(', '));
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
   }, []);
 
   const showToast = (message, type = 'success') => {

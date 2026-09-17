@@ -20,6 +20,19 @@ export const NAV_ITEMS = [
   { id: "process", label: "Quy trình" },
   { id: "cases", label: "Dự án mẫu" },
   { id: "limitations", label: "Phạm vi" },
+  {
+    id: "web-system",
+    label: "Hệ thống web",
+    children: [
+      { label: "Cập nhật", href: "https://dudi-page.vercel.app/" },
+      { label: "Đơn giá", href: "https://dudi-dongia.vercel.app/" },
+      { label: "Bán hàng", href: "https://dudi-banhang.vercel.app/" },
+      { label: "SEO", href: "https://dudisoftwareseo.vercel.app/" },
+      { label: "Bảo trì", href: "https://dudi-baotri.vercel.app/" },
+      { label: "Giới thiệu", href: "https://dudi-gioithieu.vercel.app/" },
+      { label: "Tổng hợp", href: "https://dudi-tonghop.vercel.app/" },
+    ],
+  },
   { id: "faq", label: "FAQ" },
   { id: "contact", label: "Liên hệ" },
 ];
@@ -331,24 +344,24 @@ export const LIMITATIONS_DATA = {
   sectionSubtitle:
     "Làm rõ các hạng mục bao gồm và các yêu cầu mở rộng để đảm bảo quyền lợi đôi bên trước khi triển khai",
   included: [
-    "Thiết kế giao diện UI/UX hoàn chỉnh theo số lượng sections của gói dịch vụ đã chọn.",
-    "Lập trình trang đích chuẩn Responsive trên Desktop, Tablet và Mobile.",
-    "Tích hợp Form nhận thông tin khách hàng (Email / Google Sheets / CRM theo gói).",
-    "Cài đặt các mã đo lường cơ bản (Google Analytics 4, Pixel quảng cáo).",
-    "Chỉnh sửa theo số vòng quy định trong hợp đồng sau khi bàn giao bản demo.",
-    "Hỗ trợ triển khai, trỏ tên miền và cài đặt lên Hosting của khách hàng.",
+    "Thiết kế UI/UX theo số section gói đã chọn.",
+    "Lập trình chuẩn Responsive (Desktop, Tablet, Mobile).",
+    "Tích hợp Form nhận lead (Email, Sheets, CRM).",
+    "Cài đặt mã đo lường (GA4, Meta Pixel).",
+    "Hỗ trợ chỉnh sửa theo số vòng cam kết.",
+    "Hỗ trợ trỏ tên miền & cài đặt Hosting.",
   ],
   extraQuotation: [
-    "Thiết kế mới Logo, bộ nhận diện thương hiệu hoặc tài sản đồ họa phức tạp.",
-    "Dịch vụ quay phim, chụp ảnh sản phẩm hoặc người mẫu thực tế.",
-    "Soạn thảo nội dung PR chuyên sâu ngoài phạm vi cấu trúc landing page.",
-    "Lập trình hệ thống quản trị nội dung (Backend CMS) hoặc giỏ hàng thương mại điện tử đa sản phẩm.",
-    "Chi phí duy trì tên miền (Domain) và dịch vụ lưu trữ (Hosting/Server) hàng năm.",
+    "Thiết kế mới Logo & nhận diện thương hiệu.",
+    "Dịch vụ quay phim, chụp ảnh sản phẩm.",
+    "Viết nội dung PR chuyên sâu ngoài cấu trúc.",
+    "Hệ thống CMS hoặc giỏ hàng đa sản phẩm.",
+    "Chi phí duy trì Tên miền & Hosting hàng năm.",
   ],
   conditions: [
-    "Khách hàng cung cấp đầy đủ thông tin, hình ảnh và tư liệu cần thiết theo thỏa thuận ban đầu.",
-    "Nghiệm thu tính năng và giao diện dựa trên Wireframe và bản thiết kế đã được hai bên thống nhất.",
-    "Mọi yêu cầu thay đổi kiến trúc hoặc phát sinh section sau khi chốt duyệt sẽ được tính phí bổ sung hợp lý.",
+    "Cung cấp đầy đủ thông tin, tư liệu ban đầu.",
+    "Nghiệm thu theo Wireframe & thiết kế đã duyệt.",
+    "Phát sinh thêm section tính phí bổ sung hợp lý.",
   ],
 };
 

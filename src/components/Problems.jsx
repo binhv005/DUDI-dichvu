@@ -61,7 +61,7 @@ export default function Problems() {
 
             return (
               <div key={item.number} className="problem-card">
-                {/* 3D Illustration Graphic Top */}
+                {/* 3D Illustration Graphic Top - Full Bleed */}
                 <div className="problem-img-wrap">
                   <img
                     src={media.img}
@@ -71,20 +71,23 @@ export default function Problems() {
                   />
                 </div>
 
-                {/* Card Meta Top: Number & Tag */}
-                <div className="problem-card-meta">
-                  <span className="problem-num-badge">{item.number}</span>
-                  <span
-                    className="problem-category-pill"
-                    style={{ color: media.tagColor, backgroundColor: media.bgColor }}
-                  >
-                    {media.tag}
-                  </span>
-                </div>
+                {/* Card Content Area */}
+                <div className="problem-card-content">
+                  {/* Card Meta Top: Number & Tag */}
+                  <div className="problem-card-meta">
+                    <span className="problem-num-badge">{item.number}</span>
+                    <span
+                      className="problem-category-pill"
+                      style={{ color: media.tagColor, backgroundColor: media.bgColor }}
+                    >
+                      {media.tag}
+                    </span>
+                  </div>
 
-                {/* Title & Desc */}
-                <h3 className="problem-title">{item.title}</h3>
-                <p className="problem-desc">{item.desc}</p>
+                  {/* Title & Desc */}
+                  <h3 className="problem-title">{item.title}</h3>
+                  <p className="problem-desc">{item.desc}</p>
+                </div>
               </div>
             );
           })}
