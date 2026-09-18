@@ -193,7 +193,7 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
   };
 
   return (
-    <section id="contact" className="section section-screen-fit contact-bg-custom">
+    <section id="contact" className="section contact-bg-custom">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">

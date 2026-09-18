@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   background-image: url('/hero-bg.webp');
   background-size: cover;
   background-position: center bottom;
@@ -10,8 +11,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-top: calc(var(--header-height) + 24px);
-  padding-bottom: 32px;
+  padding-top: var(--header-height);
+  padding-bottom: 24px;
   box-sizing: border-box;
 }
 

@@ -297,7 +297,7 @@ export default function Deliverables() {
   };
 
   return (
-    <section id="deliverables" className="section deliverables-marquee-section section-screen-fit bg-red-tint">
+    <section id="deliverables" className="section deliverables-marquee-section bg-red-tint">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">

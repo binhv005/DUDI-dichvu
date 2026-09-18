@@ -33,7 +33,7 @@ export default function Process() {
   const CurrentIcon = STEP_ICONS[activeStep >= 0 ? activeStep : 0] || MessageSquare;
 
   return (
-    <section id="process" className="section section-screen-fit process-stepper-section bg-gray-tint">
+    <section id="process" className="section process-stepper-section bg-gray-tint">
       <div className="container process-container">
         {/* Section Header */}
         <div className="section-header process-header-compact">

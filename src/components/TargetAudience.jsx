@@ -34,7 +34,7 @@ export default function TargetAudience({ onSelectPackage }) {
   };
 
   return (
-    <section id="target-audience" className="section section-screen-fit bg-white">
+    <section id="target-audience" className="section audience-section bg-white">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">

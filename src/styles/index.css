@@ -153,11 +153,11 @@ img {
   padding: 0 24px;
 }
 
-/* Base Section Styling (Screen-fitting & compact) */
+/* Base Section Styling (Compact, seamless flow) */
 .section {
   position: relative;
   width: 100%;
-  padding: 48px 0;
+  padding: 28px 0;
   scroll-margin-top: var(--header-height);
   display: flex;
   flex-direction: column;
@@ -165,11 +165,10 @@ img {
   box-sizing: border-box;
 }
 
-/* Screen-fitting on Desktop (>= 1024px) */
+/* Screen-fitting helper without excessive dead spacing */
 @media (min-height: 680px) and (min-width: 1024px) {
   .section-screen-fit {
-    min-height: calc(100vh - var(--header-height));
-    padding: 36px 0;
+    padding: 24px 0;
   }
 }
 
@@ -193,7 +192,7 @@ img {
 .section-header {
   text-align: center;
   max-width: 720px;
-  margin: 0 auto 28px;
+  margin: 0 auto 16px;
 }
 
 .section-tag {
@@ -206,24 +205,24 @@ img {
   letter-spacing: 0.06em;
   color: var(--primary-600);
   background-color: var(--primary-50);
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: var(--radius-full);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   border: 1px solid var(--primary-200);
 }
 
 .section-title {
-  font-size: 1.85rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text-heading);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.25;
 }
 
 .section-subtitle {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 /* Buttons */

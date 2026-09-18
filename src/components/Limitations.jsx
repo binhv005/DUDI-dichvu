@@ -4,7 +4,7 @@ import { LIMITATIONS_DATA } from '../data/content';
 
 export default function Limitations() {
   return (
-    <section id="limitations" className="section limitations-section section-screen-fit">
+    <section id="limitations" className="section limitations-section">
       <div className="container">
         {/* Section Header */}
         <div className="section-header limitations-header">

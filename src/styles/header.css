@@ -28,23 +28,85 @@
 
 /* Brand Logo */
 .header-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
-}
-
-.brand-logo-img {
-  height: 42px;
-  width: auto;
-  border-radius: 0;
-  object-fit: contain;
-  display: block;
   transition: transform var(--transition-fast);
 }
 
-.brand-logo-img:hover {
-  transform: scale(1.04);
+.header-brand:hover {
+  transform: translateY(-1px);
+}
+
+.brand-logo-container {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-decoration: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.brand-logo-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 900;
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.brand-logo-light .brand-logo-dudi {
+  color: #0f172a;
+}
+
+.brand-logo-dark .brand-logo-dudi {
+  color: #ffffff;
+}
+
+.brand-logo-software {
+  color: #ef4444;
+}
+
+.brand-logo-sub {
+  font-family: var(--font-heading, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.585rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  line-height: 1;
+}
+
+.brand-logo-light .brand-logo-sub {
+  color: #8da2ba;
+}
+
+.brand-logo-dark .brand-logo-sub {
+  color: #94a3b8;
+}
+
+/* Size modifiers */
+.brand-logo-sm .brand-logo-main {
+  font-size: 1.15rem;
+  gap: 5px;
+}
+.brand-logo-sm .brand-logo-sub {
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+}
+
+.brand-logo-lg .brand-logo-main {
+  font-size: 1.55rem;
+  gap: 7px;
+}
+.brand-logo-lg .brand-logo-sub {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
 }
 
 /* Desktop Navigation */
@@ -61,17 +123,22 @@
 .nav-list {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   list-style: none;
+  flex-wrap: nowrap;
 }
 
 .nav-link {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-body);
-  padding: 6px 10px;
+  padding: 6px 9px;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
+  white-space: nowrap !important;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .nav-link:hover {
@@ -83,6 +150,16 @@
   color: var(--primary-600);
   background-color: var(--primary-50);
   font-weight: 700;
+}
+
+@media (max-width: 1260px) and (min-width: 1040px) {
+  .nav-list {
+    gap: 1px;
+  }
+  .nav-link {
+    font-size: 0.78125rem;
+    padding: 5px 6px;
+  }
 }
 
 /* Header Actions */

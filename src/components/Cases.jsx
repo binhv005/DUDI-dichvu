@@ -63,7 +63,7 @@ export default function Cases() {
   };
 
   return (
-    <section id="cases" className="section cases-showcase-section section-screen-fit">
+    <section id="cases" className="section cases-showcase-section">
       {/* Dynamic Outside Section Background Image */}
       <div
         className="cases-outer-bg"

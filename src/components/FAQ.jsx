@@ -19,7 +19,7 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="section section-screen-fit bg-gray-tint">
+    <section id="faq" className="section bg-gray-tint">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">

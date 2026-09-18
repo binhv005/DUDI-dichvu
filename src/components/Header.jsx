@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Menu, X, ArrowRight, MessageSquare, ChevronDown } from 'lucide-react';
 import { COMPANY_INFO, NAV_ITEMS } from '../data/content';
+import BrandLogo from './BrandLogo';
 
 export default function Header({ onShowToast }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -81,14 +82,14 @@ export default function Header({ onShowToast }) {
   return (
     <header className={`site-header ${isScrolled ? 'site-header-scrolled' : ''}`}>
       <div className="container header-container">
-        {/* Brand Logo Image */}
+        {/* Brand Logo */}
         <a
           href="#hero"
           onClick={(e) => handleNavClick(e, 'hero')}
           className="header-brand"
           aria-label="DUDI SOFTWARE - Trang chủ"
         >
-          <img src="/logo.webp" alt="DUDI SOFTWARE Logo" className="brand-logo-img" />
+          <BrandLogo theme="light" />
         </a>
 
         {/* Desktop Navigation */}
@@ -154,15 +155,6 @@ export default function Header({ onShowToast }) {
 
         {/* Header Right Actions */}
         <div className="header-actions">
-          <a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, 'contact')}
-            className="btn btn-primary btn-sm header-cta"
-          >
-            <span>Tư vấn ngay</span>
-            <ArrowRight size={15} />
-          </a>
-
           {/* Mobile Menu Toggle */}
           <button
             type="button"

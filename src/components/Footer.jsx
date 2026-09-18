@@ -1,6 +1,7 @@
 import React from 'react';
-import { Phone, Mail, MapPin, FileText, ShieldCheck, ArrowUp, MessageSquare } from 'lucide-react';
+import { Phone, Mail, MapPin, FileText, ArrowUp, MessageSquare, Globe } from 'lucide-react';
 import { COMPANY_INFO } from '../data/content';
+import BrandLogo from './BrandLogo';
 
 export default function Footer({ onShowToast }) {
   const handlePhoneClick = (e) => {
@@ -29,11 +30,7 @@ export default function Footer({ onShowToast }) {
           {/* Column 1: Brand & Legal Info */}
           <div className="footer-dark-col-company">
             <div className="footer-brand-header">
-              <img src="/logo.webp" alt="DUDI Software Logo" className="footer-logo-img" />
-              <div className="footer-brand-title">
-                <span className="brand-white">DUDI </span>
-                <span className="brand-red">Software</span>
-              </div>
+              <BrandLogo theme="dark" size="lg" />
             </div>
 
             <h3 className="footer-company-legal-title">{COMPANY_INFO.name}</h3>
@@ -49,15 +46,17 @@ export default function Footer({ onShowToast }) {
               </div>
               <div className="legal-row">
                 <MapPin size={16} color="#ef4444" className="legal-icon" />
-                <span>Địa chỉ: {COMPANY_INFO.address}</span>
+                <span>Trụ sở: <strong>{COMPANY_INFO.address}</strong></span>
               </div>
             </div>
           </div>
 
-          {/* Column 2: Direct Contact */}
+          {/* Column 2: Direct Contact Channels */}
           <div className="footer-dark-col-contact">
-            <h4 className="footer-dark-heading">LIÊN HỆ TRỰC TIẾP</h4>
-            <div className="footer-dark-contact-list">
+            <h4 className="footer-dark-heading">KÊNH LIÊN HỆ TRỰC TIẾP</h4>
+            
+            <div className="footer-contact-cards">
+              {/* Phone / Hotline Card */}
               <a
                 href={`tel:${COMPANY_INFO.hotlineRaw}`}
                 onClick={handlePhoneClick}
@@ -69,6 +68,7 @@ export default function Footer({ onShowToast }) {
                 <span>Hotline: <strong>{COMPANY_INFO.hotline}</strong></span>
               </a>
 
+              {/* Email Card */}
               <a
                 href={`mailto:${COMPANY_INFO.email}`}
                 className="contact-card-link"
@@ -76,9 +76,10 @@ export default function Footer({ onShowToast }) {
                 <div className="contact-icon-badge">
                   <Mail size={15} color="#ef4444" />
                 </div>
-                <span>{COMPANY_INFO.email}</span>
+                <span>Email: <strong>{COMPANY_INFO.email}</strong></span>
               </a>
 
+              {/* Zalo Card */}
               <a
                 href={COMPANY_INFO.zaloUrl}
                 target="_blank"
@@ -126,15 +127,20 @@ export default function Footer({ onShowToast }) {
           </div>
         </div>
 
-        {/* Bottom Copyright & Official Verification */}
+        {/* Bottom Copyright & Domain Pill */}
         <div className="footer-dark-bottom">
           <p className="copyright-text-dark">
-            Copyright © {new Date().getFullYear()} DUDI Software. All rights reserved.
+            © 2024 CÔNG TY TNHH GIẢI PHÁP PHẦN MỀM DUDI. All rights reserved.
           </p>
-          <div className="footer-verified-badge">
-            <ShieldCheck size={16} color="#10b981" />
-            <span>Thông tin đăng ký kinh doanh chính thức</span>
-          </div>
+          <a
+            href="https://dudisoftware.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-domain-pill"
+          >
+            <Globe size={15} color="#ef4444" />
+            <span>dudisoftware.com</span>
+          </a>
         </div>
       </div>
     </footer>

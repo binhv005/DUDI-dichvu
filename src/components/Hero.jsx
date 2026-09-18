@@ -12,7 +12,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="section section-screen-fit hero-section">
+    <section id="hero" className="section hero-section">
       {/* Ambient Gradient Glow Layers for vivid flowing aura */}
       <div className="hero-ambient-glow glow-1"></div>
       <div className="hero-ambient-glow glow-2"></div>
