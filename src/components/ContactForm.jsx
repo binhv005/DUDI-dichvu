@@ -100,7 +100,7 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
     }
   };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Honeypot check
@@ -126,28 +126,74 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
     // Map labels for human readable email notification
     const pkgObj = FORM_DATA.packageOptions.find((p) => p.value === formData.selectedPackage);
     const objObj = FORM_DATA.objectiveOptions.find((o) => o.value === formData.objective);
+    const packageLabel = pkgObj ? pkgObj.label : (formData.selectedPackage || 'Gói Tiêu Chuẩn');
+    const objectiveLabel = objObj ? objObj.label : formData.objective;
+
+    const randomSuffix = Math.floor(100000 + Math.random() * 900000);
+    const fbLeadId = 'DUDI-' + randomSuffix;
+    const fbCreatedAt = new Date().toISOString();
+    const requirementsText = `Mục tiêu: ${objectiveLabel} | SP/Dịch vụ: ${formData.productService || 'Chưa điền'} | Hạn hoàn thành: ${formData.targetDate || 'Càng sớm càng tốt'} | Ghi chú: ${formData.description || 'Không có'}`;
+
+    // =========================================================================
+    // ⚡ 1. GỬI TRỰC TIẾP VÀO FIREBASE FIRESTORE (DASHBOARD REALTIME VERCEL)
+    // =========================================================================
+    const FIREBASE_PROJECT_ID = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_PROJECT_ID) || 'dudi-leads';
+    const FIREBASE_API_KEY = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FIREBASE_API_KEY) || 'AIzaSyBv2l4OH6dtaBqCx5D_rxtDT2HkMPfZ3kA';
+
+    try {
+      const fbUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/leads/${fbLeadId}?key=${FIREBASE_API_KEY}`;
+      
+      const fbPayload = {
+        fields: {
+          id: { stringValue: fbLeadId },
+          customerName: { stringValue: formData.fullName.trim() || 'Khách hàng' },
+          phone: { stringValue: formData.phone.trim() || 'Chưa cung cấp' },
+          email: { stringValue: 'Chưa cung cấp' },
+          company: { stringValue: formData.companyName.trim() || 'Khách cá nhân' },
+          serviceId: { stringValue: 'dudi-dichvu' },
+          serviceName: { stringValue: 'Landing Page CRO' },
+          budget: { stringValue: packageLabel },
+          source: { stringValue: 'Website Landing Page CRO' },
+          sourceUrl: { stringValue: typeof window !== 'undefined' ? window.location.href : 'https://dudi-dichvu.vercel.app' },
+          status: { stringValue: 'new' },
+          priority: { stringValue: 'high' },
+          createdAt: { stringValue: fbCreatedAt },
+          requirements: { stringValue: requirementsText }
+        }
+      };
+
+      fetch(fbUrl, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fbPayload)
+      }).then(res => {
+        console.log('🔥 [Firebase Live] Lead synced to Dashboard:', fbLeadId, res.status);
+      }).catch(err => console.warn('Firebase sync warning:', err));
+    } catch (fbErr) {
+      console.warn('Firebase error:', fbErr);
+    }
 
     const payload = {
+      lead_id: fbLeadId,
       fullName: formData.fullName.trim(),
       phone: formData.phone.trim(),
       companyName: formData.companyName.trim() || 'Cá nhân / Chưa đặt tên',
       productService: formData.productService.trim(),
       selectedPackage: formData.selectedPackage,
-      packageLabel: pkgObj ? pkgObj.label : formData.selectedPackage,
+      packageLabel: packageLabel,
       objective: formData.objective,
-      objectiveLabel: objObj ? objObj.label : formData.objective,
+      objectiveLabel: objectiveLabel,
       targetDate: formData.targetDate || 'Càng sớm càng tốt',
       description: formData.description.trim() || 'Không có ghi chú thêm',
       recipientEmail: GOOGLE_SCRIPT_CONFIG.recipientEmail,
-      landingUrl: metaInfo.landingUrl || window.location.href,
+      landingUrl: metaInfo.landingUrl || (typeof window !== 'undefined' ? window.location.href : ''),
       utmSource: metaInfo.utmSource,
       referrer: metaInfo.referrer,
-      createdAt: new Date().toISOString(),
+      createdAt: fbCreatedAt,
     };
 
     try {
       if (GOOGLE_SCRIPT_CONFIG.webAppUrl && !GOOGLE_SCRIPT_CONFIG.webAppUrl.includes('SAMPLE_')) {
-        // Post to Google Apps Script Web App
         await fetch(GOOGLE_SCRIPT_CONFIG.webAppUrl, {
           method: 'POST',
           mode: 'no-cors',
@@ -165,7 +211,6 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
       setLastSubmitTime(Date.now());
       onShowToast('Gửi thông tin đăng ký thành công! DUDI Software sẽ liên hệ lại ngay.');
 
-      // Log lead event (Google Tag / dataLayer)
       if (window.dataLayer) {
         window.dataLayer.push({
           event: 'lead_form_submit',
@@ -175,21 +220,6 @@ export default function ContactForm({ selectedPackage, onPackageChange, onShowTo
         });
       }
     }
-  };
-
-  const handleResetForm = () => {
-    setIsSubmitted(false);
-    setFormData({
-      fullName: '',
-      phone: '',
-      companyName: '',
-      productService: '',
-      objective: 'ads',
-      selectedPackage: selectedPackage || 'standard',
-      targetDate: '',
-      description: '',
-      _gotcha: '',
-    });
   };
 
   return (
