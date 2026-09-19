@@ -23,6 +23,7 @@ import './styles/pricing.css';
 import './styles/form.css';
 import './styles/footer.css';
 import './styles/floating.css';
+import './styles/aichat.css';
 import './styles/cases.css';
 import './styles/animations.css';
 
@@ -116,7 +117,7 @@ export default function App() {
     if (contactElement) {
       contactElement.scrollIntoView({ behavior: 'smooth' });
     }
-    showToast(`Đã tự động chọn gói dịch vụ cho bạn trong Form đăng ký!`);
+    showToast('Đã tự động chọn gói dịch vụ cho bạn trong Form đăng ký!');
   };
 
   return (
@@ -125,48 +126,48 @@ export default function App() {
       <Header onShowToast={showToast} />
 
       <main>
-        {/* S02: Hero (Nền Đỏ Rất Nhạt) */}
+        {/* S02: Hero */}
         <Hero />
 
-        {/* S03: Đối Tượng Phù Hợp (Nền Trắng) */}
+        {/* S03: Đối Tượng Phù Hợp */}
         <TargetAudience onSelectPackage={handleSelectPackage} />
 
-        {/* S04: Thực Trạng Khách Hàng (Nền Xám Rất Nhạt) */}
+        {/* S04: Thực Trạng Khách Hàng */}
         <Problems />
 
-        {/* S05: Hạng Mục Bàn Giao (Nền Đỏ Rất Nhạt) */}
+        {/* S05: Hạng Mục Bàn Giao */}
         <Deliverables />
 
-        {/* S06: Bảng Giá 3 Gói (Nền Trắng) */}
+        {/* S06: Bảng Giá 3 Gói */}
         <Pricing onSelectPackage={handleSelectPackage} />
 
-        {/* S07: Quy Trình 9 Bước (Nền Xám Rất Nhạt) */}
+        {/* S07: Quy Trình 9 Bước */}
         <Process />
 
-        {/* S08: Dự Án Mẫu (Nền Đỏ Rất Nhạt) */}
+        {/* S08: Dự Án Mẫu */}
         <Cases />
 
-        {/* S09: Phạm Vi & Điều Kiện (Nền Trắng) */}
+        {/* S09: Phạm Vi & Điều Kiện */}
         <Limitations />
 
-        {/* S10: FAQ Accordion (Nền Xám Rất Nhạt) */}
+        {/* S10: FAQ Accordion */}
         <FAQ />
 
-        {/* S11: Form Đăng Ký Tư Vấn (Nền Đỏ Rất Nhạt) */}
+        {/* S11: Form Đăng Ký Tư Vấn */}
         <ContactForm
           selectedPackage={selectedPackage}
           onPackageChange={setSelectedPackage}
           onShowToast={showToast}
         />
 
-        {/* S12: Final CTA (Nền Trắng) */}
+        {/* S12: Final CTA */}
         <FinalCTA onShowToast={showToast} />
       </main>
 
       {/* S13: Footer */}
       <Footer onShowToast={showToast} />
 
-      {/* Floating Call / Zalo / BackToTop Buttons */}
+      {/* Floating Robot AI / Call / Zalo / BackToTop Buttons */}
       <FloatingActions onShowToast={showToast} />
 
       {/* Global Toast Notification */}
