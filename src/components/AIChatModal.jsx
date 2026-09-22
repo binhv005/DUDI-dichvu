@@ -5,29 +5,104 @@ import {
   Send, 
   Sparkles, 
   CheckCheck, 
-  MessageSquare, 
   ChevronRight,
+  MessageSquare,
   Phone
 } from 'lucide-react';
-import { COMPANY_INFO } from '../data/content';
+import '../styles/aichat.css';
+
+const AI_API_URL = import.meta.env.VITE_AI_API_URL || 'https://dudi-ai.onrender.com/api/chat';
 
 const QUICK_SUGGESTIONS = [
-  { id: 'services', label: '💡 DUDI cung cấp dịch vụ gì?', query: 'DUDI cung cấp dịch vụ gì?' },
-  { id: 'ai-solution', label: '🚀 Giải pháp AI & Hoạt động của DUDI', query: 'Bạn có thể giải thích ngắn gọn cách AI hoạt động và giải pháp của DUDI không?' },
-  { id: 'pricing', label: '💰 Báo giá chi tiết các gói', query: 'Chi phí thiết kế landing page tại DUDI khoảng bao nhiêu?' },
-  { id: 'process', label: '⚡ Quy trình 9 bước triển khai', query: 'Quy trình triển khai dịch vụ tại DUDI như thế nào?' },
-  { id: 'contact', label: '📞 Kết nối chuyên viên tư vấn', query: 'Tôi muốn gặp chuyên viên tư vấn trực tiếp' }
+  {
+    id: "services",
+    label: "💡 DUDI cung cấp dịch vụ gì?",
+    query: "DUDI cung cấp những giải pháp và dịch vụ gì?"
+  },
+  {
+    id: "pricing",
+    label: "💰 Chi phí & Báo giá chi tiết",
+    query: "Chi phí các gói dịch vụ tại DUDI khoảng bao nhiêu?"
+  },
+  {
+    id: "process",
+    label: "⚡ Quy trình triển khai dự án",
+    query: "Quy trình triển khai dịch vụ tại DUDI như thế nào?"
+  },
+  {
+    id: "contact",
+    label: "📞 Kết nối chuyên viên tư vấn",
+    query: "Tôi muốn gặp chuyên viên tư vấn trực tiếp"
+  }
 ];
+
+const BOT_WELCOME_TEXT = "Xin chào! 👋\nTôi là DU - Trợ lý ảo AI của DUDI SOFTWARE.\nTôi có thể hỗ trợ gì cho bạn hôm nay?";
 
 const INITIAL_MESSAGES = [
   {
     id: 1,
     sender: 'bot',
-    text: "Xin chào! 👋\nTôi là trợ lý ảo AI của DUDI.\nTôi có thể hỗ trợ gì cho bạn hôm nay?",
+    text: BOT_WELCOME_TEXT,
     time: '10:30',
     type: 'text'
   }
 ];
+
+function FormattedMessageText({ text, isBot }) {
+  if (!text) return null;
+  const lines = text.split('\n');
+
+  const parseInline = (str) => {
+    const regex = /(\*\*.*?\*\*|\*[^*]+?\*)/g;
+    const parts = str.split(regex);
+    return parts.map((part, idx) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+        return (
+          <strong key={idx} style={{ fontWeight: 700, color: isBot ? '#0f172a' : '#ffffff' }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*') && part.length >= 2) {
+        return <em key={idx} style={{ fontStyle: 'italic', opacity: 0.9 }}>{part.slice(1, -1)}</em>;
+      }
+      return part;
+    });
+  };
+
+  return (
+    <div className="ai-chat-formatted-text">
+      {lines.map((line, lIdx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={lIdx} style={{ height: '4px' }} />;
+        const isBullet = trimmed.startsWith('- ') || trimmed.startsWith('• ') || (trimmed.startsWith('* ') && !trimmed.startsWith('**'));
+        const isNumbered = /^\d+\.\s/.test(trimmed);
+
+        if (isBullet) {
+          const bulletContent = trimmed.replace(/^[-•*]\s+/, '');
+          return (
+            <div key={lIdx} className="ai-chat-list-item">
+              <span className="ai-chat-bullet-dot">•</span>
+              <span style={{ flex: 1 }}>{parseInline(bulletContent)}</span>
+            </div>
+          );
+        }
+        if (isNumbered) {
+          const numMatch = trimmed.match(/^(\d+)\./);
+          const num = numMatch ? numMatch[1] : '•';
+          const numberedContent = trimmed.replace(/^\d+\.\s+/, '');
+          return (
+            <div key={lIdx} className="ai-chat-list-item">
+              <span className="ai-chat-number-badge">{num}.</span>
+              <span style={{ flex: 1 }}>{parseInline(numberedContent)}</span>
+            </div>
+          );
+        }
+        return <div key={lIdx}>{parseInline(line)}</div>;
+      })}
+    </div>
+  );
+}
 
 export default function AIChatModal({ isOpen, onClose }) {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
@@ -35,6 +110,7 @@ export default function AIChatModal({ isOpen, onClose }) {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,6 +121,28 @@ export default function AIChatModal({ isOpen, onClose }) {
     }
   }, [messages, isTyping, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      const isToggleBtn = event.target.closest('[data-chat-toggle="true"]');
+      if (isToggleBtn) return;
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   const handleReset = () => {
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -52,86 +150,24 @@ export default function AIChatModal({ isOpen, onClose }) {
       {
         id: Date.now(),
         sender: 'bot',
-        text: "Xin chào! 👋\nTôi là trợ lý ảo AI của DUDI.\nTôi có thể hỗ trợ gì cho bạn hôm nay?",
+        text: BOT_WELCOME_TEXT,
         time: timeStr,
         type: 'text'
       }
     ]);
   };
 
-  const generateBotResponse = (userText) => {
-    const query = userText.toLowerCase().trim();
-
-    if (query.includes('ai') || query.includes('hoạt động') || query.includes('giải pháp') || query.includes('cách ai')) {
-      return {
-        text: `DUDI ứng dụng AI & công nghệ thế hệ mới để nâng tầm chuyển đổi số cho doanh nghiệp:\n\n` +
-          `• **Trợ lý AI & Chatbot CSKH 24/7**: Phản hồi tức thì, tư vấn tự động & thu thập khách hàng tiềm năng chuẩn xác.\n` +
-          `• **Tối ưu Trải nghiệm (UI/UX)**: Phân tích hành vi người dùng, cá nhân hóa giao diện và tỷ lệ chuyển đổi cao.\n` +
-          `• **Tối ưu Hiệu năng & Core Web Vitals**: Tốc độ tải trang dưới 1.5s, 95+ điểm Google PageSpeed.\n` +
-          `• **Nền tảng Web/App Hiện đại**: Kiến trúc React/Next.js mượt mà, chuẩn SEO và bảo mật cao cấp.`,
-        actionType: 'consult'
-      };
+  const scrollToSection = (sectionId) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      onClose();
     }
-
-    if (query.includes('dịch vụ') || query.includes('cung cấp') || query.includes('làm gì') || query.includes('sản phẩm')) {
-      return {
-        text: `DUDI chuyên sâu các giải pháp công nghệ website & landing page tối ưu chuyển đổi:\n\n` +
-          `1. **Thiết kế Landing Page Tối Ưu Chuyển Đổi**: Giao diện độc quyền chuẩn nhận diện thương hiệu.\n` +
-          `2. **Tối ưu Tốc độ & Chuẩn SEO**: Đạt chuẩn Core Web Vitals, tương thích 100% mọi thiết bị.\n` +
-          `3. **Tích hợp Form, CRM & AI Chatbot**: Kết nối tự động dữ liệu khách hàng về hệ thống.\n` +
-          `4. **Bảo hành & Hỗ trợ kỹ thuật 24/7**: Cam kết bảo trì, an toàn dữ liệu và hỗ trợ tận tâm.`,
-        actionType: 'services'
-      };
-    }
-
-    if (query.includes('giá') || query.includes('chi phí') || query.includes('báo giá') || query.includes('bao nhiêu') || query.includes('gói')) {
-      return {
-        text: `DUDI cung cấp 3 gói dịch vụ thiết kế rõ ràng và minh bạch:\n\n` +
-          `• **Gói Basic (Cơ bản)**: Phù hợp chạy chiến dịch ngắn hạn, ra mắt sản phẩm mới.\n` +
-          `• **Gói Standard (Tiêu chuẩn - Khuyên dùng)**: Tối ưu UI/UX chuyên sâu, hiệu ứng động & chuẩn SEO kỹ thuật.\n` +
-          `• **Gói Premium (Cao cấp)**: Thiết kế may đo toàn diện, tích hợp tính năng nâng cao & hỗ trợ 24/7 VIP.\n\n` +
-          `💡 Bạn có thể xem chi tiết từng gói tại phần Bảng giá hoặc để lại thông tin để nhận báo giá chi tiết!`,
-        actionType: 'pricing'
-      };
-    }
-
-    if (query.includes('quy trình') || query.includes('bước') || query.includes('thời gian') || query.includes('triển khai')) {
-      return {
-        text: `Quy trình 9 bước chuẩn hóa tại DUDI giúp dự án hoàn thiện bài bản và chuẩn xác:\n\n` +
-          `1. Tiếp nhận & Phân tích mục tiêu\n` +
-          `2. Nghiên cứu thị trường & Đối thủ\n` +
-          `3. Xây dựng Cấu trúc Wireframe\n` +
-          `4. Thiết kế Giao diện UI/UX\n` +
-          `5. Lập trình Responsive & Tối ưu tải trang\n` +
-          `6. Tích hợp Form & Tracking chuyển đổi\n` +
-          `7. Kiểm thử đa thiết bị & Bảo mật\n` +
-          `8. Bàn giao Source code & Hướng dẫn\n` +
-          `9. Bảo hành & Hỗ trợ vận hành sau bàn giao`,
-        actionType: 'process'
-      };
-    }
-
-    if (query.includes('liên hệ') || query.includes('tư vấn') || query.includes('số điện thoại') || query.includes('gặp') || query.includes('hotline') || query.includes('zalo')) {
-      return {
-        text: `Đội ngũ DUDI luôn sẵn sàng lắng nghe và tư vấn miễn phí cho bạn:\n\n` +
-          `📞 Hotline: **${COMPANY_INFO.hotline}**\n` +
-          `💬 Zalo Official: Nhấn nút bên dưới để trao đổi trực tiếp\n` +
-          `🏢 Địa chỉ: ${COMPANY_INFO.address}\n\n` +
-          `Chuyên viên kỹ thuật sẽ phản hồi ngay lập tức trong vòng 15 phút!`,
-        actionType: 'contact'
-      };
-    }
-
-    return {
-      text: `Cảm ơn bạn đã quan tâm! DUDI có thể hỗ trợ bạn thiết kế landing page, tối ưu hiệu năng, xây dựng web app hoặc tích hợp trợ lý AI.\n\n` +
-        `Bạn muốn tìm hiểu thêm về **Dịch vụ**, **Báo giá** hay cần **Gặp chuyên viên tư vấn** trực tiếp?`,
-      actionType: 'general'
-    };
   };
 
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const text = (textToSend || inputValue).trim();
-    if (!text) return;
+    if (!text || isTyping) return;
 
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -148,22 +184,90 @@ export default function AIChatModal({ isOpen, onClose }) {
     setInputValue('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      const botReply = generateBotResponse(text);
+    const historyPayload = messages
+      .filter((m) => !m.isError)
+      .map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }));
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+      const response = await fetch(AI_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          history: historyPayload
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Máy chủ phản hồi mã: ${response.status}`);
+      }
+
+      let botReplyText = '';
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await response.json();
+        botReplyText = data.reply || data.response || data.message || data.text || data.answer || JSON.stringify(data);
+      } else {
+        botReplyText = await response.text();
+      }
+
+      if (!botReplyText || !botReplyText.trim()) {
+        botReplyText = 'DUDI đã nhận được thông tin từ bạn. Nếu cần giải đáp nhanh hoặc tư vấn chuyên sâu, quý khách có thể liên hệ trực tiếp hotline để được hỗ trợ tức thì!';
+      }
+
       const botTime = new Date();
       const botTimeStr = `${String(botTime.getHours()).padStart(2, '0')}:${String(botTime.getMinutes()).padStart(2, '0')}`;
+
+      let actionType = null;
+      const lowerReply = botReplyText.toLowerCase();
+      if (lowerReply.includes('hotline') || lowerReply.includes('zalo') || lowerReply.includes('liên hệ')) {
+        actionType = 'contact';
+      } else if (lowerReply.includes('báo giá') || lowerReply.includes('chi phí') || lowerReply.includes('gói') || lowerReply.includes('bảng giá')) {
+        actionType = 'pricing';
+      } else if (lowerReply.includes('dịch vụ') || lowerReply.includes('giải pháp') || lowerReply.includes('hạng mục')) {
+        actionType = 'services';
+      } else if (lowerReply.includes('quy trình') || lowerReply.includes('bước')) {
+        actionType = 'process';
+      }
 
       const newBotMsg = {
         id: Date.now() + 1,
         sender: 'bot',
-        text: botReply.text,
+        text: botReplyText.trim(),
         time: botTimeStr,
-        actionType: botReply.actionType
+        actionType: actionType
       };
 
       setMessages((prev) => [...prev, newBotMsg]);
+    } catch (error) {
+      console.error('Lỗi kết nối AI Backend:', error);
+      const botTime = new Date();
+      const botTimeStr = `${String(botTime.getHours()).padStart(2, '0')}:${String(botTime.getMinutes()).padStart(2, '0')}`;
+      const isTimeout = error.name === 'AbortError';
+      const errorMsg = {
+        id: Date.now() + 1,
+        sender: 'bot',
+        text: isTimeout
+          ? '⚠️ Kết nối tới máy chủ AI đang bị trễ do server đang khởi động. Bạn vui lòng thử lại sau giây lát hoặc liên hệ trực tiếp đội ngũ DUDI để được hỗ trợ ngay!'
+          : '⚠️ Không thể kết nối tới máy chủ AI DUDI. Bạn vui lòng kiểm tra kết nối mạng hoặc liên hệ trực tiếp chuyên viên tư vấn qua Hotline/Zalo.',
+        time: botTimeStr,
+        actionType: 'contact',
+        isError: true,
+        retryText: text
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 600);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -173,47 +277,47 @@ export default function AIChatModal({ isOpen, onClose }) {
     }
   };
 
-  const scrollToSection = (sectionId) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-      onClose();
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
     <>
-      <div className="ai-chat-backdrop" onClick={onClose} aria-hidden="true" />
-
       <div 
-        className="ai-chat-modal-wrapper"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Cửa sổ trò chuyện với Trợ lý AI DUDI"
-      >
-        <div className="ai-chat-window">
-          {/* 1. Header */}
+        className="ai-chat-backdrop" 
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <div className="ai-chat-modal-wrapper">
+        <div 
+          ref={modalRef}
+          className="ai-chat-window"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Cửa sổ trò chuyện với Trợ lý AI DU - DUDI SOFTWARE"
+        >
+          {/* Header */}
           <div className="ai-chat-header">
             <div className="ai-chat-header-info">
               <div className="ai-chat-avatar-wrapper">
                 <img 
                   src="/robot-mascot.webp" 
-                  alt="Trợ lý AI DUDI" 
+                  alt="DU Trợ lý AI" 
                   className="ai-chat-avatar-img"
+                  onError={(e) => {
+                    e.target.src = '/robot-mascot.png';
+                  }}
                 />
                 <span className="ai-chat-online-badge" />
               </div>
 
               <div className="ai-chat-title-group">
                 <h3>
-                  <span>Trợ lý AI DUDI</span>
-                  <Sparkles size={14} color="#f59e0b" />
+                  <span>DU - Trợ lý AI DUDI</span>
+                  <Sparkles className="ai-chat-sparkle-icon" />
                 </h3>
                 <p>
                   <span className="ai-chat-status-dot" />
-                  <span>Luôn sẵn sàng hỗ trợ bạn</span>
+                  <span>Trực tuyến 24/7 • DUDI AI Backend</span>
                 </p>
               </div>
             </div>
@@ -238,11 +342,10 @@ export default function AIChatModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          {/* 2. Messages List */}
+          {/* Messages Body */}
           <div className="ai-chat-body">
             {messages.map((msg) => {
               const isBot = msg.sender === 'bot';
-
               return (
                 <div
                   key={msg.id}
@@ -252,53 +355,58 @@ export default function AIChatModal({ isOpen, onClose }) {
                     <div className="ai-chat-bot-mini-avatar">
                       <img 
                         src="/robot-mascot.webp" 
-                        alt="Bot Avatar" 
+                        alt="DU Bot" 
+                        onError={(e) => { e.target.src = '/robot-mascot.png'; }}
                       />
                     </div>
                   )}
 
                   <div className="ai-chat-bubble-container">
-                    <div className="ai-chat-bubble">
-                      <div style={{ whiteSpace: 'pre-line' }}>
-                        {msg.text.split('\n').map((line, i) => {
-                          const parts = line.split(/(\*\*.*?\*\*)/g);
-                          return (
-                            <React.Fragment key={i}>
-                              {parts.map((part, pIdx) => {
-                                if (part.startsWith('**') && part.endsWith('**')) {
-                                  return <strong key={pIdx}>{part.slice(2, -2)}</strong>;
-                                }
-                                return part;
-                              })}
-                              {i < msg.text.split('\n').length - 1 && <br />}
-                            </React.Fragment>
-                          );
-                        })}
-                      </div>
+                    <div className={`ai-chat-bubble ${msg.isError ? 'is-error' : ''}`}>
+                      <FormattedMessageText text={msg.text} isBot={isBot} />
 
-                      {/* Bot Action Buttons */}
-                      {isBot && msg.actionType && (
+                      {msg.isError && msg.retryText && (
+                        <div>
+                          <button
+                            type="button"
+                            onClick={() => handleSendMessage(msg.retryText)}
+                            className="ai-chat-retry-btn"
+                          >
+                            <RotateCcw size={13} />
+                            <span>Thử gửi lại</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {isBot && !msg.isError && msg.actionType && (
                         <div className="ai-chat-actions">
                           {msg.actionType === 'pricing' && (
                             <button
                               type="button"
                               onClick={() => scrollToSection('pricing')}
-                              className="ai-chat-action-btn btn-indigo"
+                              className="ai-chat-action-btn btn-red"
                             >
                               <span>Xem Bảng giá</span>
-                              <ChevronRight size={13} />
+                              <ChevronRight size={14} />
                             </button>
                           )}
                           {msg.actionType === 'contact' && (
                             <>
                               <a
-                                href={COMPANY_INFO.zaloUrl}
+                                href="https://zalo.me/0909163821"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="ai-chat-action-btn btn-blue"
                               >
-                                <MessageSquare size={13} />
+                                <MessageSquare size={14} />
                                 <span>Nhắn Zalo</span>
+                              </a>
+                              <a
+                                href="tel:0909163821"
+                                className="ai-chat-action-btn btn-green"
+                              >
+                                <Phone size={14} />
+                                <span>Gọi Hotline</span>
                               </a>
                               <button
                                 type="button"
@@ -309,24 +417,14 @@ export default function AIChatModal({ isOpen, onClose }) {
                               </button>
                             </>
                           )}
-                          {msg.actionType === 'services' && (
-                            <button
-                              type="button"
-                              onClick={() => scrollToSection('deliverables')}
-                              className="ai-chat-action-btn btn-indigo"
-                            >
-                              <span>Hạng mục bàn giao</span>
-                              <ChevronRight size={13} />
-                            </button>
-                          )}
                           {msg.actionType === 'process' && (
                             <button
                               type="button"
                               onClick={() => scrollToSection('process')}
-                              className="ai-chat-action-btn btn-indigo"
+                              className="ai-chat-action-btn btn-red"
                             >
-                              <span>Sơ đồ 9 bước</span>
-                              <ChevronRight size={13} />
+                              <span>Xem Quy trình</span>
+                              <ChevronRight size={14} />
                             </button>
                           )}
                         </div>
@@ -335,7 +433,7 @@ export default function AIChatModal({ isOpen, onClose }) {
 
                     <div className="ai-chat-meta">
                       <span>{msg.time}</span>
-                      {!isBot && <CheckCheck size={13} className="ai-chat-seen-icon" />}
+                      {!isBot && <CheckCheck className="ai-chat-seen-icon" size={14} />}
                     </div>
                   </div>
                 </div>
@@ -347,13 +445,15 @@ export default function AIChatModal({ isOpen, onClose }) {
                 <div className="ai-chat-bot-mini-avatar">
                   <img 
                     src="/robot-mascot.webp" 
-                    alt="Bot Avatar" 
+                    alt="Bot" 
+                    onError={(e) => { e.target.src = '/robot-mascot.png'; }}
                   />
                 </div>
                 <div className="ai-chat-typing-bubble">
-                  <div className="ai-typing-dot" />
-                  <div className="ai-typing-dot" />
-                  <div className="ai-typing-dot" />
+                  <span className="ai-typing-dot" />
+                  <span className="ai-typing-dot" />
+                  <span className="ai-typing-dot" />
+                  <span className="ai-typing-text">DU đang soạn câu trả lời...</span>
                 </div>
               </div>
             )}
@@ -361,12 +461,13 @@ export default function AIChatModal({ isOpen, onClose }) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* 3. Quick Suggestions Chips */}
+          {/* Quick Suggestions Chips */}
           <div className="ai-chat-suggestions">
             {QUICK_SUGGESTIONS.map((chip) => (
               <button
                 key={chip.id}
                 type="button"
+                disabled={isTyping}
                 onClick={() => handleSendMessage(chip.query)}
                 className="ai-chat-chip"
               >
@@ -375,7 +476,7 @@ export default function AIChatModal({ isOpen, onClose }) {
             ))}
           </div>
 
-          {/* 4. Footer Input */}
+          {/* Footer Input */}
           <div className="ai-chat-footer">
             <form 
               onSubmit={(e) => {
@@ -388,18 +489,19 @@ export default function AIChatModal({ isOpen, onClose }) {
                 ref={inputRef}
                 type="text"
                 value={inputValue}
+                disabled={isTyping}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Nhập tin nhắn của bạn..."
+                placeholder={isTyping ? "Trợ lý AI đang phản hồi..." : "Nhập tin nhắn của bạn..."}
                 className="ai-chat-input"
               />
               <button
                 type="submit"
-                disabled={!inputValue.trim()}
+                disabled={!inputValue.trim() || isTyping}
                 aria-label="Gửi tin nhắn"
-                className={`ai-chat-send-btn ${inputValue.trim() ? 'active' : ''}`}
+                className={`ai-chat-send-btn ${inputValue.trim() && !isTyping ? 'active' : ''}`}
               >
-                <Send size={15} style={{ marginLeft: '1px' }} />
+                <Send size={15} />
               </button>
             </form>
           </div>
