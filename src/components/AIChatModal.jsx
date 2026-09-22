@@ -317,7 +317,7 @@ export default function AIChatModal({ isOpen, onClose }) {
                 </h3>
                 <p>
                   <span className="ai-chat-status-dot" />
-                  <span>Trực tuyến 24/7 • DUDI AI Backend</span>
+                  <span>Trực tuyến 24/7</span>
                 </p>
               </div>
             </div>
